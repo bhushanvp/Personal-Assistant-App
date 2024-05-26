@@ -6,6 +6,7 @@ import { readLatestMessageFrom, readUnreadMessages, readUnreadMessagesFrom, send
 import { sendEmailByAddress, sendEmailByContactName } from '../services/emailing/EmailingServices'
 import { getReminders, getRemindersForToday, setReminder } from '../services/reminders/RemindingServices'
 import { searchContact } from '../services/contacts/ContactsServices'
+import Tts from 'react-native-tts'
 
 const QueryBox = ({ dismissKeyboard, intentRecognizer }) => {
     const dispatch = useDispatch()
@@ -22,65 +23,79 @@ const QueryBox = ({ dismissKeyboard, intentRecognizer }) => {
         const entities = response["entities"]
         showToast(`${String(intent)}`)
         console.log(intent, entities);
-        if (intent==="makeCall") {
-            await makeCall(entities["to_contact_name"]);
-        }
-        else if (intent==="sendMessage") {
-            const to_contact_name = entities["to_contact_name"];
-            const body = entities["body"];
-            console.log('To Contact Name:', to_contact_name);
-            console.log('Body:', body);
+        switch (intent) {
+            case "makeCall":
+                await makeCall(entities["to_contact_name"]);
+                break;
     
-            if (to_contact_name && body) {
-                await sendMessage(to_contact_name, body);
-            } else {
-                console.error('Missing entity values:', { to_contact_name, body });
-            }
-        }
-        else if (intent==="readUnreadMessages") {
-            await readUnreadMessages();
-        }
-        else if (intent==="readUnreadMessagesFrom") {
-            const from_contact_name = entities["from_contact_name"];
-            await readUnreadMessagesFrom(from_contact_name);
-        }
-        else if (intent==="readLatestMessageFrom") {
-            const from_contact_name = entities["from_contact_name"];
-            await readLatestMessageFrom(from_contact_name);
-        }
-        else if (intent=="sendEmailByAddress") {
-            const to_email = entities["to_email"];
-            const subject = entities["subject"];
-            const body = entities["body"];
-            await sendEmailByAddress(to_email, subject, body, user);
-        }
-        else if (intent=="sendEmailByContactName") {
-            const contact_name = entities["contact_name"];
-            const subject = entities["subject"];
-            const body = entities["body"];
-            await sendEmailByContactName(contact_name, subject, body, user);
-        }
-        else if (intent==="setReminder") {
-            const reminder_type = entities["reminder_type"];
-            const reminder_name = entities["reminder_name"];
-            const reminder_time = entities["reminder_time"];
-            await setReminder(reminder_type, reminder_name, reminder_time, user.email_address);
-        }
-        else if (intent==="getReminders") {
-            await getReminders(user.email_address);
-        }
-        else if (intent==="getRemindersForToday") {
-            await getRemindersForToday(user.email_address);
-        }
-        else if (intent==="getMissedCalls") {
-            await getMissedCalls();
-        }
-        else if (intent==="searchContact") {
-            const contact_name = entities["contact_name"];
-            await searchContact(contact_name);
-        }
-        else {
-            console.error(entities);
+            case "sendMessage":
+                let to_contact_name = entities["to_contact_name"];
+                let body = entities["body"];
+                console.log('To Contact Name:', to_contact_name);
+                console.log('Body:', body);
+        
+                if (to_contact_name && body) {
+                    await sendMessage(to_contact_name, body);
+                } else {
+                    Tts.speak('Please provide the contact name and message body');
+                }
+                break;
+            
+            case "readUnreadMessages":
+                await readUnreadMessages();
+                break;
+            
+            case "readUnreadMessagesFrom":
+                let from_contact_name = entities["from_contact_name"];
+                await readUnreadMessagesFrom(from_contact_name);
+                break;
+            
+            case "readLatestMessageFrom":
+                from_contact_name = entities["from_contact_name"];
+                await readLatestMessageFrom(from_contact_name);
+                break;
+            
+            case "sendEmailByAddress":
+                let to_email = entities["to_email"];
+                subject = entities["subject"];
+                body = entities["body"];
+                await sendEmailByAddress(to_email, subject, body, user);
+                break;
+            
+            case "sendEmailByContactName":
+                contact_name = entities["contact_name"];
+                subject = entities["subject"];
+                body = entities["body"];
+                await sendEmailByContactName(contact_name, subject, body, user);
+                break;
+            
+            case "setReminder":
+                let reminder_type = entities["reminder_type"];
+                let reminder_name = entities["reminder_name"];
+                let reminder_time = entities["reminder_time"];
+                await setReminder(reminder_type, reminder_name, reminder_time, user.email_address);
+                break;
+            
+            case "getReminders":
+                await getReminders(user.email_address);
+                break;
+            
+            case "getRemindersForToday":
+                await getRemindersForToday(user.email_address);
+                break;
+            
+            case "getMissedCalls":
+                await getMissedCalls();
+                break;
+            
+            case "searchContact":
+                let contact_name = entities["contact_name"];
+                await searchContact(contact_name);
+                break;
+            
+            default:
+                Tts.speak(entities)
+                break;
         }
     }
 

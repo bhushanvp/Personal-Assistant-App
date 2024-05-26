@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Image, PermissionsAndroid, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Voice from '@react-native-voice/voice';
+import { requestReadContactsPermission } from '../services/contacts/contactsPermissions';
 
 function Mic() {
     const dispatch = useDispatch();
@@ -26,11 +27,14 @@ function Mic() {
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 setMicPermission(true);
                 console.log('You can use the microphone');
+                return true;
             } else {
                 console.log('Microphone permission denied');
+                return false;
             }
         } catch (err) {
             console.warn(err);
+            return false;
         }
     };
 
@@ -54,7 +58,16 @@ function Mic() {
     };
 
     useEffect(() => {
-        getMicrophonePermission();
+        requestReadContactsPermission()
+        .then((permission) => {
+            console.log('Contacts permission', permission);
+        });
+        
+        getMicrophonePermission()
+        .then((permission) => {
+            console.log('Mic permission', permission);
+        });
+        
         Voice.onSpeechStart = () => console.log('Speech start detected');
         Voice.onSpeechEnd = handleMicStop;
         Voice.onSpeechResults = onSpeechResults;
@@ -66,6 +79,8 @@ function Mic() {
     }, []);
 
     const onSpeechError = (e) => {
+        dispatch({ type: 'SET_query', query: { ...query, micActive: false, editingQuery: false } });
+        Voice.destroy().then(Voice.removeAllListeners);
         console.log('Speech error', e);
     };
 

@@ -1,7 +1,7 @@
 const initial_user = {
-    name: "Bhushan Patil",
-    phone_number: "+917709525925",
-    email_address: "bhushanvp.7@gmail.com",
+    name: "",
+    phone_number: "",
+    email_address: "",
     gemini_api_key: "AIzaSyDo8nMdlV16ludz_g3X-N1d2HVq72F2tzs"
 }
 

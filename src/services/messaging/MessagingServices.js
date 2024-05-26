@@ -8,17 +8,32 @@ import { getContactsByPhoneNumber } from "react-native-contacts";
 export const sendMessage = async (to_contact_name, body) => {
     const hasPermission = await requestSendMessagePermission();
     if (hasPermission) {
-        const required_contact = await searchSimilarContact(to_contact_name)
-        if (required_contact === null) {
-            console.log(`No contact with name ${to_contact_name} was found`);
-            return
+        const search_result = await searchSimilarContact(to_contact_name)
+        if (search_result.status === 'exact') {
+            const contact = search_result.contact;
+            const number = contact.phoneNumbers[0].number
+            console.log(`Sending message to ${to_contact_name}...`)
+            SendIntentAndroid.sendSms(number, body);
+            return true;
         }
-        const number = required_contact.phoneNumbers[0].number
-        console.log(`Sending message to ${to_contact_name}...`)
-        SendIntentAndroid.sendSms(number, body);
+        else {
+            const contacts = search_result.contacts;
+            console.log(`There are ${contacts.length} contacts with name ${to_contact_name}`);
+            Tts.speak(`There are ${contacts.length} contacts with name ${to_contact_name}`);
+
+            contacts.forEach(contact => {
+                console.log(`${contact.displayName}`);
+                Tts.speak(`${contact.displayName}`);
+            })
+
+            console.log(`Whom shall I message?`);
+            Tts.speak(`Whom shall I message?`);
+            return false;
+        }
     } else {
         Tts.speak('Permission denied');
         console.log('Permission denied');
+        return false;
     }
 }
 
@@ -53,19 +68,35 @@ export const readUnreadMessages = async () => {
                 });
             }
         )
+        return true;
     } else {
         Tts.speak('Permission denied');
         console.log('Permission denied');
+        return false;
     }
 }
 
 export const readUnreadMessagesFrom = async (from_contact_name) => {
-    const required_contact = await searchSimilarContact(from_contact_name)
-    if (required_contact === null) {
-        console.log(`No contact with name ${from_contact_name} was found`);
-        return
+
+    const search_result = await searchSimilarContact(from_contact_name)
+
+    if (search_result.status !== 'exact') {
+        const contacts = search_result.contacts;
+        console.log(`There are ${contacts.length} contacts with name ${from_contact_name}`);
+        Tts.speak(`There are ${contacts.length} contacts with name ${from_contact_name}`);
+
+        contacts.forEach(contact => {
+            console.log(`${contact.displayName}`);
+            Tts.speak(`${contact.displayName}`);
+        })
+
+        console.log(`Whose messages should I read?`);
+        Tts.speak(`Whose messages should I read?`);
+        return false;
     }
-    const from_phone_number = required_contact.phoneNumbers[0].number
+
+    const required_contact = search_result.contact
+    const from_phone_number = required_contact.phoneNumbers[0].number.replaceAll(" ", "")
 
     const hasPermission = await requestReadMessagePermission();
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000 + 5 * 60 * 60 * 1000 + 30 * 60 * 1000);
@@ -76,6 +107,7 @@ export const readUnreadMessagesFrom = async (from_contact_name) => {
         maxDate: current.getTime(),
         address: from_phone_number,
     };
+    
     if (hasPermission) {
         await SmsAndroid.list(
             JSON.stringify(unread_from_filter_config),
@@ -99,20 +131,32 @@ export const readUnreadMessagesFrom = async (from_contact_name) => {
                 });
             }
         )
+        return true;
     } else {
         Tts.speak('Permission denied');
         console.log('Permission denied');
+        return false;
     }
 }
 
 export const readLatestMessageFrom = async (from_contact_name) => {
     const hasPermission = await requestReadMessagePermission();
-    const required_contact = await searchSimilarContact(from_contact_name)
-    if (required_contact === null) {
-        Tts.speak(`No contact with name ${contact_name} was found`);
-        console.log(`No contact with name ${to_contact_name} was found`);
-        return
+    const search_result = await searchSimilarContact(from_contact_name)
+    if (search_result.status !== 'exact') {
+        const contacts = search_result.contacts;
+        console.log(`There are ${contacts.length} contacts with name ${from_contact_name}`);
+        Tts.speak(`There are ${contacts.length} contacts with name ${from_contact_name}`);
+
+        contacts.forEach(contact => {
+            console.log(`${contact.displayName}`);
+            Tts.speak(`${contact.displayName}`);
+        })
+
+        console.log(`Whose messages should I read?`);
+        Tts.speak(`Whose messages should I read?`);
+        return false;
     }
+    const required_contact = search_result.contact
     const phone_number = required_contact.phoneNumbers[0].number
     const unread_from_filter_config = {
         box: 'inbox',
@@ -128,14 +172,17 @@ export const readLatestMessageFrom = async (from_contact_name) => {
             (count, smsList) => {
                 smsList = JSON.parse(smsList);
                 sms = smsList[0]
+                console.log(smsList);
                 let time = new Date(Number(sms["date_sent"]));
                 const formattedTime = time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
                 const formattedDate = time.toLocaleString('en-US', { month: 'long', day: 'numeric' });
                 Tts.speak(`${from_contact_name} had sent ${sms["body"]} at ${formattedTime} on ${formattedDate}`);
             }
         )
+        return true;
     } else {
         Tts.speak('Permission denied');
         console.log('Permission denied');
+        return false;
     }
 }

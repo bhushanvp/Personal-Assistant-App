@@ -12,10 +12,10 @@ const Settings = () => {
 
     const [editingName, setEditingName] = useState(false);
     const [editedName, setEditedName] = useState(user.name);
-  
+
     const [editingPhoneNumber, setEditingPhoneNumber] = useState(false);
     const [editedPhoneNumber, setEditedPhoneNumber] = useState(user.phone_number);
-  
+
     const [editingEmailAddress, setEditingEmailAddress] = useState(false);
     const [editedEmailAddress, setEditedEmailAddress] = useState(user.email_address);
 
@@ -23,35 +23,35 @@ const Settings = () => {
     const [editedGeminiApiKey, setEditedGeminiApiKey] = useState(user.gemini_api_key);
 
     const saveData = () => {
-        const edited_user_data = { ...user, user_email_address: editedEmailAddress, user_name: editedName, user_phone_number: editedPhoneNumber }
-    
+        const edited_user_data = { ...user, email_address: editedEmailAddress, name: editedName, phone_number: editedPhoneNumber }
+
         setUserData(edited_user_data)
-      }
-    
-      const setUserData = async (edited_user_data) => {
+    }
+
+    const setUserData = async (edited_user_data) => {
         let status = true
         try {
 
-          if (status) {
-            const user_data = edited_user_data
-            showToast("Updated Data")
-            await AsyncStorage.setItem('user_data', JSON.stringify(user_data));
-            dispatch({ type: "SET_user", user: user_data });
-          }
-          else {
-            showToast(userData.data)
-            setEditedName(user.user_name)
-            setEditedEmailAddress(user.user_email_address)
-            setEditedPhoneNumber(user.user_phone_number)
-          }
+            if (status) {
+                const user_data = edited_user_data
+                showToast("Updated Data")
+                await AsyncStorage.setItem('PERSONAL_ASSISTANT_APP_USER_DATA', JSON.stringify(user_data));
+                dispatch({ type: "SET_user", user: user_data });
+            }
+            else {
+                // showToast(userData.data)
+                setEditedName(user.user_name)
+                setEditedEmailAddress(user.user_email_address)
+                setEditedPhoneNumber(user.user_phone_number)
+            }
         } catch (error) {
-          showToast(error.message)
+            showToast(error.message)
         }
-      }
-    
-      const showToast = (message) => {
+    }
+
+    const showToast = (message) => {
         ToastAndroid.show(message, ToastAndroid.SHORT);
-      }
+    }
 
     return (
         <ScrollView
@@ -59,7 +59,7 @@ const Settings = () => {
             refreshControl={
                 <RefreshControl
                     refreshing={refreshing}
-                    // onRefresh={() => getuserData()}
+                // onRefresh={() => getuserData()}
                 />
             }
         >
@@ -193,71 +193,71 @@ export default Settings
 
 const styles = StyleSheet.create({
     title_container: {
-      marginTop: 20,
-      marginBottom: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
+        marginTop: 20,
+        marginBottom: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     title_text: {
-      fontSize: 20,
-      color: 'black',
+        fontSize: 20,
+        color: 'black',
     },
     container: {
-      flex: 1,
-      paddingVertical: 10,
-      alignItems: 'center',
+        flex: 1,
+        paddingVertical: 10,
+        alignItems: 'center',
     },
     profile_category: {
-      width: '90%',
-      paddingTop: 5,
-      paddingBottom: 10,
-      paddingHorizontal: 10,
-      marginBottom: 20,
-      borderWidth: 1,
-      borderRadius: 20,
+        width: '90%',
+        paddingTop: 5,
+        paddingBottom: 10,
+        paddingHorizontal: 10,
+        marginBottom: 20,
+        borderWidth: 1,
+        borderRadius: 20,
     },
     profile_category_data_container: {
-      paddingHorizontal: 10,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: "#D3D3D3",
-      borderRadius: 10
+        paddingHorizontal: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: "#D3D3D3",
+        borderRadius: 10
     },
     profile_category_title: {
-      fontSize: 13,
-      paddingLeft: 5,
-      paddingBottom: 0,
+        fontSize: 13,
+        paddingLeft: 5,
+        paddingBottom: 0,
     },
     profile_category_data: {
-      textDecorationLine: 'underline',
-      fontSize: 18,
-      color: 'black',
-      paddingVertical: 5,
+        textDecorationLine: 'underline',
+        fontSize: 18,
+        color: 'black',
+        paddingVertical: 5,
     },
     profile_category_data_mod: {
-      textDecorationLine: 'underline',
-      fontSize: 15,
-      color: 'black',
+        textDecorationLine: 'underline',
+        fontSize: 15,
+        color: 'black',
     },
     edit_icon: {
-      height: 25,
-      width: 25,
+        height: 25,
+        width: 25,
     },
     save_button_container: {
-      alignItems: "center"
+        alignItems: "center"
     },
     save_button: {
-      margin: 20,
-      padding: 10,
-      alignItems: "center",
-      width: "30%",
-      backgroundColor: "skyblue",
-      borderWidth: 1,
-      borderRadius: 25
+        margin: 20,
+        padding: 10,
+        alignItems: "center",
+        width: "30%",
+        backgroundColor: "skyblue",
+        borderWidth: 1,
+        borderRadius: 25
     },
     save_button_text: {
-      fontSize: 25,
-      color: "black"
+        fontSize: 25,
+        color: "black"
     }
-  });
+});

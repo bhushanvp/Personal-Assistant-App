@@ -5,5 +5,9 @@ import { readLatestMessageFromDeclaration, readUnreadMessagesDeclaration, readUn
 import { getRemindersDeclaration, setReminderDeclaration, getRemindersForTodayDeclaration } from "./reminders/remindingDeclarations.js";
 
 export const functions = [
-    makeCallDeclaration, getMissedCallsDeclaration, readLatestEmailFromDeclaration, readUnreadEmailsDeclaration, readUnreadEmailsFromDeclaration, sendEmailByAddressDeclaration, sendEmailByNameDeclaration, readLatestMessageFromDeclaration, readUnreadMessagesDeclaration, readUnreadMessagesFromDeclaration, sendMessageDeclaration, getRemindersDeclaration, setReminderDeclaration, getRemindersForTodayDeclaration, searchContactDeclaration
+    searchContactDeclaration,
+    makeCallDeclaration, getMissedCallsDeclaration,
+    readLatestEmailFromDeclaration, readUnreadEmailsDeclaration, readUnreadEmailsFromDeclaration, sendEmailByAddressDeclaration, sendEmailByNameDeclaration,
+    readLatestMessageFromDeclaration, readUnreadMessagesDeclaration, readUnreadMessagesFromDeclaration, sendMessageDeclaration,
+    getRemindersDeclaration, setReminderDeclaration, getRemindersForTodayDeclaration,
 ];

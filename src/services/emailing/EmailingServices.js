@@ -15,15 +15,35 @@ export const sendEmailByAddress = async (to_email, subject, body, user) => {
 export const sendEmailByContactName = async (contact_name, subject, body, user) => {
     const hasPermission = await requestSendEmailPermission(user);
     if (hasPermission) {
-        const required_contact = await searchSimilarContact(contact_name)
-        if (required_contact === null) {
-            Tts.speak(`No contact with name ${contact_name} was found`);
-            console.log(`No contact with name ${to_contact_name} was found`);
-            return
+        const search_result = await searchSimilarContact(contact_name)
+        if (search_result.status === 'exact') {
+            if (subject!=="" && body!=="") {
+                const required_contact = search_result.contact;
+                const email = required_contact.emailAddresses[0].email
+                console.log(`Sending email to ${email}...`)
+                await Linking.openURL(`mailto:${email}?subject=${subject}&body=${body}`);
+                return true;
+            }
+            else {
+                console.log("Please provide a subject and body for the email");
+                Tts.speak("Please provide a subject and body for the email");
+                return false;
+            }
         }
-        const email = required_contact.emailAddresses[0].email
-        console.log(`Sending email to ${email}...`)
-        await Linking.openURL(`mailto:${email}?subject=${subject}&body=${body}`);
+        else {
+            const contacts = search_result.contacts;
+            console.log(`There are ${contacts.length} contacts with name ${contact_name}`);
+            Tts.speak(`There are ${contacts.length} contacts with name ${contact_name}`);
+
+            contacts.forEach(contact => {
+                console.log(`${contact.displayName}`);
+                Tts.speak(`${contact.displayName}`);
+            })
+
+            console.log(`Whom shall I send the email to?`);
+            Tts.speak(`Whom shall I send the email to?`);
+            return false;
+        }
     } else {
         console.log('Permission denied');
     }

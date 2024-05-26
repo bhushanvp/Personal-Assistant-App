@@ -8,15 +8,31 @@ import { searchSimilarContact } from "../contacts/ContactsServices";
 export async function makeCall(contact_name) {
     const hasPermission = await requestCallPermission();
     if (hasPermission) {
-        const required_contact = await searchSimilarContact(contact_name)
-        if (required_contact === null) {
-            console.log(`No contact with name ${to_contact_name} was found`);
-            Tts.speak(`No contact with name ${to_contact_name} was found`);
-            return
+        const search_result = await searchSimilarContact(contact_name)
+        if (search_result.status === 'exact') {
+            const contact = search_result.contact;
+            Tts.speak(`Calling ${contact.displayName}...`);
+            SendIntentAndroid.sendPhoneCall(contact.phoneNumbers[0].number, true);
+            return true;
         }
-        SendIntentAndroid.sendPhoneCall(required_contact.phoneNumbers[0].number, true);
+        else {
+            const contacts = search_result.contacts;
+            console.log(`There are ${contacts.length} contacts with name ${contact_name}`);
+            Tts.speak(`There are ${contacts.length} contacts with name ${contact_name}`);
+
+            contacts.forEach(contact => {
+                console.log(`${contact.displayName}`);
+                Tts.speak(`${contact.displayName}`);
+            })
+
+            console.log(`Whom shall I call?`);
+            Tts.speak(`Whom shall I call?`);
+            return false;
+        }
     } else {
         console.log('Permission denied');
+        Tts.speak('Permission denied');
+        return false;
     }
 }
 
@@ -36,14 +52,14 @@ export async function getMissedCalls() {
     if (hasPermission) {
         const start = new Date(Date.now() - 6 * 60 * 60 * 1000);
         const end = new Date(Date.now());
-        const callLogs = await CallLogs.load(5, filter={
+        const callLogs = await CallLogs.load(5, filter = {
             minTimestamp: start.getTime(),
             maxTimestamp: end.getTime(),
             type: 'MISSED'
         })
-        
+
         const missedCalls = callLogs.filter(call => call.type === 'MISSED');
-        
+
         console.log(`You have ${missedCalls.length} missed calls`);
         Tts.speak(`You have ${missedCalls.length} missed calls`);
         missedCalls.forEach(call => {
