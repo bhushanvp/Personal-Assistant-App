@@ -1,79 +1,119 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Personal Assistant App
 
-# Getting Started
+This is a repository which contains the code for a audio-textual personal assistant android app built using React Native.
+
+It is a wrapper on [Gemini](https://ai.google.dev/) (you can change it with other LLMs as well) which uses function calling to search contacts, make calls, check missed calls, check messages, send messages, set reminders, check for future reminders, etc.
+
+Please make sure you add your details in the Settings page of the app before you query it. The app requires a lot of permissions to function properly.
+
+## Available Features
+### Calling
+- #### makeCall
+   - **Description:** Make a phone call to the given contact name.
+   - **Args:**
+      - to_contact_name (str)
+
+- #### getMissedCalls
+   - **Description:** Get the list of missed calls from past 6 hours.
+
+### Contacts / Phonebook
+- #### searchContact
+   - **Description:** Search for a contact by name.
+   - **Args:**
+      - contact_name (str)
+
+### Text Messaging
+- #### sendMessage
+   - **Description:** Send a message with text as body to the given phone number.
+   - **Args:**
+      - to_contact_name (str)
+      - body (str)
+
+- #### readUnreadMessages
+   - **Description:** Read all unread messages.
+
+- #### readUnreadMessagesFrom
+   - **Description:** Read the unread messages from the given from_contact_name.
+   - **Args:**
+      - from_contact_name (str)
+
+- #### readLatestMessageFrom
+   - **Description:** Read the latest message from the given contact_name.
+   - **Args:**
+      from_contact_name (str)
+
+### Reminding
+- #### setReminder
+   - **Description:** Set a reminder or meeting or alarm with a name at a given time.
+   - **Args:**
+      - reminder_name (str)
+      - reminder_type (enum) [alarm, reminder, meeting]
+      - reminder_time (str) [HH:MM-dd:mm:yyyy]
+
+- #### getRemindersForToday
+   - **Description:** Get the reminders that are set for today(next 24 hours).
+
+- #### getReminders
+   - **Description:** Get all the reminders that are set in the next 2 days.
+
+## Upcoming Features
+
+### Emailing
+- #### sendEmailByName
+   - **Description:** Send an email with a subject, body, to the given email address.
+   - **Args:**
+      - contact_name (str)
+      - subject (str)
+      - body (str)
+
+- #### sendEmailByAddress
+   - **Description:** Send an email with a subject, body, to the given email address.
+   - **Args:**
+      - to_email (email, str)
+      - subject (str)
+      - body (str)
+
+- #### readUnreadEmails
+   - **Description:** Read all unread emails.
+
+- #### readUnreadEmailsFrom
+   - **Description:** Read the unread emails from the given email address.
+   - **Args:**
+      - from_email (email, str)
+
+- #### readLatestEmailFrom
+   - **Description:** Read the latest email from the given email address.
+   - **Args:**
+      - from_email (email, str)
+
+## Contributions
+Please feel free to contribute to this app, I am a beginner in React Native so please forgive me for my coding style :)
+
+## Getting Started
 
 >**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-## Step 1: Start the Metro Server
+
+### Step 2: Install required libraries
+Install app the required libraries
+```bash
+npm i
+```
+
+### Step 1: Start the Metro Server
 
 First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
 To start Metro, run the following command from the _root_ of your React Native project:
 
 ```bash
-# using npm
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Start your Application
+### Step 2: Start your Application
 
 Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
-### For Android
-
 ```bash
-# using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
