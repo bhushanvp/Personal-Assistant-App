@@ -26,6 +26,11 @@ const convertToISO = async (customDateStr, type) => {
 };
 
 export const setReminder = async (reminder_type, reminder_name, reminder_time, email) => {
+    if (email === "" || email === undefined) {
+        console.log("Error fetching events:", error);
+        Tts.speak("Please add your email address in the settings.");
+        return;
+    }
     const hasPermission = await requestReminderPermission();
     if (hasPermission) {
         const calendar = await getRequiredCalender(email)
@@ -82,6 +87,10 @@ export const getRemindersForToday = async (email) => {
 }
 
 export const getReminders = async (email) => {
+    if (email === "") {
+        console.log("Error fetching events:", error);
+        Tts.speak("Please add your email address in the settings.");
+    }
     const hasPermission = await requestReminderPermission();
     if (hasPermission) {
         const calendar = await getRequiredCalender(email)
@@ -91,12 +100,11 @@ export const getReminders = async (email) => {
             const events = await RNCalendarEvents.fetchAllEvents(startDate, endDate, [calendar.id]);
             Tts.speak(`You have ${events.length} reminders in the next 2 days`);
             events.map(event => {
-
                 Tts.speak(`${event.title} on ${new Date(event.startDate).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, weekday: 'long', day: 'numeric', month: 'long' })}`);
             });
         } catch (error) {
             console.log("Error fetching events:", error);
-            Tts.speak("Error fetching reminders");
+            Tts.speak(`Error fetching reminders. ${error.message}`);
         }
     }
     else {

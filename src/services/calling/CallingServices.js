@@ -20,6 +20,12 @@ export async function makeCall(contact_name) {
             console.log(`There are ${contacts.length} contacts with name ${contact_name}`);
             Tts.speak(`There are ${contacts.length} contacts with name ${contact_name}`);
 
+            if(contacts.length() === 1) {
+                const contact = contacts[0]
+                Tts.speak(`Calling ${contact.displayName}...`);
+                SendIntentAndroid.sendPhoneCall(contact.phoneNumbers[0].number, true);
+                return true;
+            }
             contacts.forEach(contact => {
                 console.log(`${contact.displayName}`);
                 Tts.speak(`${contact.displayName}`);

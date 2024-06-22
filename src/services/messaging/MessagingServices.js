@@ -18,6 +18,14 @@ export const sendMessage = async (to_contact_name, body) => {
         }
         else {
             const contacts = search_result.contacts;
+            
+            if(contacts.length() === 1) {
+                const contact = contacts[0]
+                Tts.speak(`Calling ${contact.displayName}...`);
+                SendIntentAndroid.sendPhoneCall(contact.phoneNumbers[0].number, true);
+                return true;
+            }
+
             console.log(`There are ${contacts.length} contacts with name ${to_contact_name}`);
             Tts.speak(`There are ${contacts.length} contacts with name ${to_contact_name}`);
 
