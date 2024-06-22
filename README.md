@@ -6,6 +6,8 @@ It is a wrapper on [Gemini](https://ai.google.dev/) (you can change it with othe
 
 Please make sure you add your details in the Settings page of the app before you query it. The app requires a lot of permissions to function properly.
 
+**Note:** I am a beginner in React Native so please forgive me for my coding style :)
+
 ## Available Features
 ### Calling
 - #### makeCall
