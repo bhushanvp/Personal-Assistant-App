@@ -2,7 +2,7 @@
 
 This is a repository which contains the code for a audio-textual personal assistant android app built using React Native.
 
-It is a wrapper on [Gemini](https://ai.google.dev/) (you can change it with other LLMs as well) which uses function calling to search contacts, make calls, check missed calls, check messages, send messages, set reminders, check for future reminders, etc.
+It is a wrapper on [Gemini](https://ai.google.dev/) (you can change it with other LLMs as well) which uses [function calling](https://ai.google.dev/gemini-api/docs/function-calling) to search contacts, make calls, check missed calls, check messages, send messages, set reminders, check for future reminders, etc.
 
 Please make sure you add your details in the Settings page of the app before you query it. The app requires a lot of permissions to function properly.
 
