@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { functions } from "../index.js";
-const GEMINI_API_KEY = "AIzaSyDo8nMdlV16ludz_g3X-N1d2HVq72F2tzs";
+
+// Add your Gemini API Key here
+// const GEMINI_API_KEY = <Your Gemini API Key>
 
 
 export class GeminiAPI {
